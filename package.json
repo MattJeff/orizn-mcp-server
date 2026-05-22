@@ -1,0 +1,50 @@
+{
+  "name": "orizn-visa-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Orizn Visa API — visa requirements for 39,585 passport-destination pairs in 15 languages",
+  "main": "dist/index.js",
+  "bin": {
+    "orizn-visa-mcp": "dist/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0"
+  },
+  "keywords": [
+    "mcp",
+    "visa",
+    "travel",
+    "passport",
+    "ai-agent",
+    "claude",
+    "gpt",
+    "model-context-protocol",
+    "immigration",
+    "country",
+    "orizn"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MattJeff/orizn-mcp-server"
+  },
+  "homepage": "https://visa.orizn.app",
+  "author": "Orizn",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

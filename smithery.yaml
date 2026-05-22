@@ -1,0 +1,26 @@
+name: orizn-visa
+description: "Visa requirements for 39,585 passport-destination pairs in 15 languages. Check visa types, required documents, and travel tips for any country combination."
+category: Travel
+tags:
+  - visa
+  - travel
+  - passport
+  - immigration
+  - multilingual
+  - country-data
+icon: "🌍"
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      apiKey:
+        type: string
+        description: "Orizn API key for premium features (free tier works without key)"
+    required: []
+  commandFunction: |
+    (config) => ({
+      command: "npx",
+      args: ["-y", "orizn-visa-mcp"],
+      env: config.apiKey ? { ORIZN_API_KEY: config.apiKey } : {}
+    })
