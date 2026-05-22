@@ -58,6 +58,42 @@ Add to your Cursor MCP settings:
 }
 ```
 
+### Codex Desktop
+
+OpenAI Codex Desktop supports MCP natively. Add to your Codex MCP config:
+
+```json
+{
+  "mcpServers": {
+    "orizn-visa": {
+      "command": "npx",
+      "args": ["-y", "orizn-visa-mcp"],
+      "env": {
+        "ORIZN_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+### Composio
+
+[Composio](https://composio.dev) connects AI agents to 500+ tools via MCP. Use Orizn Visa through Composio's MCP support:
+
+```json
+{
+  "mcpServers": {
+    "orizn-visa": {
+      "command": "npx",
+      "args": ["-y", "orizn-visa-mcp"],
+      "env": {
+        "ORIZN_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
 ### Any MCP Client
 
 ```bash
