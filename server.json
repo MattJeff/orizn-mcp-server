@@ -1,18 +1,18 @@
 {
-  "$schema": "https://registry.modelcontextprotocol.io/schemas/server.json",
-  "name": "io.github.mattjeff/orizn-visa-mcp",
-  "description": "Visa requirements for 39,585 passport-destination pairs in 15 languages. Check visa types, required documents, and travel tips for any country combination.",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.MattJeff/orizn-visa-mcp",
+  "description": "Visa requirements for 39,585 passport-destination pairs in 15 languages.",
   "repository": {
     "url": "https://github.com/MattJeff/orizn-mcp-server",
     "source": "github"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "packages": [
     {
       "registryType": "npm",
-      "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "orizn-visa-mcp",
-      "version": "1.0.0",
+      "version": "1.0.1",
+      "runtimeHint": "npx",
       "transport": {
         "type": "stdio"
       },
@@ -20,7 +20,8 @@
         {
           "name": "ORIZN_API_KEY",
           "description": "API key for premium features (optional -- free tier works without key)",
-          "isRequired": false
+          "isRequired": false,
+          "isSecret": true
         }
       ]
     }

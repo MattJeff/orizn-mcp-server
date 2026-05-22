@@ -1,6 +1,6 @@
 {
   "name": "orizn-visa-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for Orizn Visa API — visa requirements for 39,585 passport-destination pairs in 15 languages",
   "main": "dist/index.js",
   "bin": {
@@ -40,6 +40,7 @@
     "url": "https://github.com/MattJeff/orizn-mcp-server"
   },
   "homepage": "https://visa.orizn.app",
+  "mcpName": "io.github.MattJeff/orizn-visa-mcp",
   "author": "Orizn",
   "files": [
     "dist"
