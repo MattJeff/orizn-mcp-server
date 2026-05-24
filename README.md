@@ -189,6 +189,12 @@ See full plan details at **[visa.orizn.app](https://visa.orizn.app)**
 
 ---
 
+## Feedback
+
+Building a travel agent or visa tool? We'd love to hear what you're building.
+
+→ **api@orizn.app** — Feature requests, partnerships, and questions welcome.
+
 ## License
 
 MIT

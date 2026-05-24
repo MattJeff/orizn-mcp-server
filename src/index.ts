@@ -265,7 +265,7 @@ const TOOLS = [
     name: "quick_visa_check",
     description:
       "Quickly check whether a visa is required between two countries. Returns only the visa status (visa-free, e-visa, visa required, etc.) " +
-      "without detailed documents or process steps. This endpoint is free and does not require an API key. " +
+      "without detailed documents or process steps. Requires a free API key. Get one at https://visa.orizn.app " +
       "Use this tool for simple yes/no visa requirement checks or when no API key is available. " +
       "For full details, use check_visa_requirement instead.",
     inputSchema: {
@@ -429,7 +429,7 @@ async function main(): Promise<void> {
         case "quick_visa_check": {
           const passport = validateISO3(args.passport, "passport");
           const destination = validateISO3(args.destination, "destination");
-          result = await apiFetch("/check", { passport, destination }, apiKey, false);
+          result = await apiFetch("/check", { passport, destination }, apiKey, true);
           break;
         }
 
