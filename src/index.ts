@@ -371,9 +371,23 @@ async function main(): Promise<void> {
   const apiKey = resolveApiKey(cliArgs.apiKey);
 
   if (apiKey) {
-    log("info", "API key loaded");
+    log("info", "API key loaded — all tools available");
   } else {
-    log("info", "No API key configured. Only free endpoints (quick_visa_check, get_coverage_stats) will work.");
+    log("info", "Running in free mode — quick_visa_check and get_coverage_stats only");
+    process.stderr.write(
+      "\n" +
+      "  ╭─────────────────────────────────────────────────────╮\n" +
+      "  │  Orizn Visa MCP — free mode                        │\n" +
+      "  │                                                     │\n" +
+      "  │  Get your free API key for full access:             │\n" +
+      "  │  → https://visa.orizn.app                          │\n" +
+      "  │                                                     │\n" +
+      "  │  3,000 req/month · 15 languages · no credit card   │\n" +
+      "  │                                                     │\n" +
+      "  │  Then set: ORIZN_API_KEY=orizn_visa_...            │\n" +
+      "  ╰─────────────────────────────────────────────────────╯\n" +
+      "\n"
+    );
   }
 
   const server = new Server(
