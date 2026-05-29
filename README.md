@@ -4,19 +4,38 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-blue.svg)](https://modelcontextprotocol.io)
 
-> Give any AI agent instant access to visa requirements for 39,585 passport-destination pairs in 15 languages.
+> Give any AI agent instant access to visa requirements for **39,585 passport-destination pairs** in **15 languages**, with **32 data points per visa** — fees, processing times, photo specs, transit visas, embassies, overstay penalties, safety advisories, and more.
 
 ---
 
-## Features
+## Tools
 
-| Tool | Description |
-|------|-------------|
-| `check_visa_requirement` | Full visa details with documents, process & tips |
-| `quick_visa_check` | Fast yes/no visa check (no API key needed) |
-| `get_all_destinations` | All 199 destinations for any passport |
-| `get_visa_changes` | Track recent visa policy changes |
-| `get_coverage_stats` | Database coverage statistics |
+| Tool | Auth | Description |
+|------|------|-------------|
+| `check_visa_requirement` | API key | Full visa details — documents, process, tips, transit, fees, processing days, photo specs, vaccinations, insurance, overstay penalties, embassies, safety, health, remote work, extensions, and more |
+| `quick_visa_check` | API key | Fast yes/no visa check (visa-free / e-visa / required / on arrival / ETA / no admission) |
+| `get_all_destinations` | Key (Pro) | All 199 destinations for any passport |
+| `get_visa_changes` | Key (Starter) | Track recent visa policy changes |
+| `check_transit_visa` | API key | Transit visa rules + free transit hours for top 50 layover hubs (DXB, IST, DOH, SIN, ...) |
+| `get_coverage_stats` | Free | Database coverage statistics |
+
+Each tool description tells the agent exactly **when** to call it (transit, overstay, photos, vaccinations, etc.), so models pick the right one without prompting tricks.
+
+### What `check_visa_requirement` returns
+
+Every full visa response includes up to **32 fields**:
+
+- **Core:** `requirement`, `visa_free_days`, `description`, `documents_required`, `process`, `tips`, `country_info`, `verified`
+- **Cost & timing:** `visa_fee` (single / multiple entry), `processing_days` (standard / express / rush), `best_apply_period`
+- **Entry:** `passport_validity_months`, `entry_by_mode` (air / land / sea), `transit_visa` (per-hub rules)
+- **Documents:** `photo_specs` (mm dimensions, background, glasses rules)
+- **Health & safety:** `vaccinations_required`, `health_requirements`, `insurance_required`, `safety` (advisory level 1–4)
+- **Penalties & warnings:** `overstay_penalty` (fine, ban, criminal), `dual_nationality_warnings`, `stamp_warnings`
+- **Long-stay:** `remote_work_visa` (digital nomad), `extension_rules`, `minor_rules`
+- **Embassies:** `embassy.your_embassy_at_destination` (emergencies) + `embassy.visa_application_embassy` (where to apply)
+- **History:** `reciprocity_history` (past policy changes between the two countries)
+
+Anything not relevant to a given pair is omitted (e.g. `remote_work_visa` only appears when a digital nomad visa exists).
 
 ---
 
@@ -125,9 +144,36 @@ Get your API key at **[visa.orizn.app](https://visa.orizn.app)**
 
 Just ask your AI agent in natural language:
 
+**Basic checks**
 - *"Do I need a visa to travel from France to Thailand?"*
 - *"Show me all visa-free countries for a Brazilian passport."*
 - *"What documents do I need as a US citizen visiting China?"*
+
+**Layovers & transit**
+- *"Do I need a transit visa if I'm Indian and connecting through Dubai?"*
+- *"Can I leave the airport during a 12h layover in Istanbul on a Chinese passport?"*
+
+**Cost & timing**
+- *"How much does a Schengen visa cost for a Filipino passport holder?"*
+- *"What's the processing time for a US tourist visa right now?"*
+
+**Health & insurance**
+- *"Which vaccinations do I need to enter Brazil with a French passport?"*
+- *"What's the minimum travel insurance coverage required for Schengen?"*
+
+**Documents & photos**
+- *"What are the photo specs for a Chinese visa application?"*
+- *"How long does my passport need to be valid to enter Vietnam?"*
+
+**Penalties & rules**
+- *"What's the fine if I overstay my Thai visa by 3 days?"*
+- *"Are there entry restrictions if my passport has an Israeli stamp?"*
+
+**Long-stay & remote work**
+- *"Does Portugal have a digital nomad visa, and what does it cost?"*
+- *"Can I extend my Thai tourist visa inside Thailand?"*
+
+**Recent changes**
 - *"Have any visa policies changed recently for Indian passport holders?"*
 
 ---
@@ -142,15 +188,15 @@ Just ask your AI agent in natural language:
 | `de` | German |
 | `it` | Italian |
 | `pt` | Portuguese |
-| `nl` | Dutch |
 | `ru` | Russian |
 | `zh` | Chinese |
 | `ja` | Japanese |
 | `ko` | Korean |
 | `ar` | Arabic |
 | `hi` | Hindi |
-| `tr` | Turkish |
+| `th` | Thai |
 | `vi` | Vietnamese |
+| `tl` | Filipino |
 
 ---
 
@@ -183,9 +229,9 @@ See full plan details at **[visa.orizn.app](https://visa.orizn.app)**
 
 ## Links
 
-- **API Documentation** — [visa.orizn.app](https://visa.orizn.app)
-- **GitHub** — [github.com/MattJeff/orizn-visa-api](https://github.com/MattJeff/orizn-visa-api)
-- **Support** — [visa.orizn.app](https://visa.orizn.app)
+- **API Documentation** — [visa.orizn.app/visa-api/dashboard/docs](https://visa.orizn.app/visa-api/dashboard/docs)
+- **GitHub** — [github.com/MattJeff/orizn-mcp-server](https://github.com/MattJeff/orizn-mcp-server)
+- **Support** — [api@orizn.app](mailto:api@orizn.app)
 
 ---
 

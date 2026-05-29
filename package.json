@@ -1,7 +1,7 @@
 {
   "name": "orizn-visa-mcp",
-  "version": "1.0.3",
-  "description": "MCP server for Orizn Visa API — visa requirements for 39,585 passport-destination pairs in 15 languages",
+  "version": "1.1.0",
+  "description": "MCP server for Orizn Visa API — 39,585 passport-destination pairs in 15 languages, 32 data points per visa (fees, processing, photo specs, transit visas, embassies, overstay penalties, safety, vaccinations, remote work visas)",
   "main": "dist/index.js",
   "bin": {
     "orizn-visa-mcp": "dist/index.js"

@@ -236,10 +236,14 @@ const TOOLS = [
   {
     name: "check_visa_requirement",
     description:
-      "Check visa requirements between any two countries. Returns visa type (visa-free, e-visa, visa required, etc.), " +
-      "allowed stay duration, required documents, step-by-step application process, and travel tips. " +
+      "Check visa requirements between any two countries. Returns visa type, stay duration, required documents, " +
+      "application process, travel tips, transit visa rules, passport validity requirements, visa fees, " +
+      "processing times, photo specifications, vaccination requirements, insurance requirements, " +
+      "safety advisories, health entry requirements, overstay penalties, entry mode differences (air/land/sea), " +
+      "remote work visa options, extension rules, minor travel rules, dual nationality warnings, and stamp impact warnings. " +
       "Covers 39,585 passport-destination pairs in 15 languages. " +
-      "Use this tool when the user asks about visa rules, entry requirements, travel documents, or whether they need a visa to visit a country. " +
+      "Use this tool when the user asks about visa rules, entry requirements, travel documents, transit visas, " +
+      "passport validity, visa costs, vaccination requirements, or whether they need a visa to visit a country. " +
       "Requires an API key.",
     inputSchema: {
       type: "object" as const,
@@ -329,6 +333,31 @@ const TOOLS = [
     },
   },
   {
+    name: "check_transit_visa",
+    description:
+      "Check if a transit visa is needed when transiting through a specific airport/country. " +
+      "Returns transit visa requirements, free transit hours, and conditions for the top 50 transit hubs worldwide. " +
+      "Use this tool when the user asks about layovers, transit visas, connecting flights, or stopover requirements.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        passport: {
+          type: "string",
+          description: "ISO 3166-1 alpha-3 country code of the passport holder.",
+        },
+        transit_country: {
+          type: "string",
+          description: "ISO 3166-1 alpha-3 country code of the transit/layover country (e.g. 'ARE' for Dubai, 'TUR' for Istanbul).",
+        },
+        lang: {
+          type: "string",
+          description: "Language code. Defaults to 'en'.",
+        },
+      },
+      required: ["passport", "transit_country"],
+    },
+  },
+  {
     name: "get_coverage_stats",
     description:
       "Get coverage statistics for the Orizn Visa database. Returns the total number of passport-destination pairs covered, " +
@@ -393,7 +422,7 @@ async function main(): Promise<void> {
   const server = new Server(
     {
       name: "orizn-visa",
-      version: "1.0.0",
+      version: "1.1.0",
     },
     {
       capabilities: {
@@ -447,6 +476,19 @@ async function main(): Promise<void> {
           if (passport) params.passport = passport;
           if (destination) params.destination = destination;
           result = await apiFetch("/changes", params, apiKey, true);
+          break;
+        }
+
+        case "check_transit_visa": {
+          const passport = validateISO3(args.passport, "passport");
+          const transitCountry = validateISO3(args.transit_country, "transit_country");
+          const lang = validateLang(args.lang);
+          const fullResult = await apiFetch("", { passport, destination: transitCountry, lang }, apiKey, true) as { data?: { transit_visa?: unknown } };
+          result = {
+            passport,
+            transit_country: transitCountry,
+            transit_visa: fullResult?.data?.transit_visa || { message: "No transit visa data available for this pair" },
+          };
           break;
         }
 
