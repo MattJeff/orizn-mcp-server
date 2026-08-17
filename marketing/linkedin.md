@@ -28,7 +28,7 @@ At **Orizn**, we built what the agentic travel ecosystem needs but did not have:
 
 Here is what it looks like in practice:
 
-- **39,585 passport-destination pairs** covering virtually every travel corridor on the planet
+- **40,027 passport-destination pairs** covering virtually every travel corridor on the planet
 - **15 languages** so agents can serve users in their native language
 - **136 government sources** continuously monitored for policy changes
 - **Structured data** — not scraped HTML, not PDFs, not "best guesses." Clean, typed, reliable data that AI agents can reason over

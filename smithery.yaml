@@ -1,5 +1,5 @@
 name: orizn-visa
-description: "Visa requirements for 39,585 passport-destination pairs in 15 languages. Check visa types, required documents, and travel tips for any country combination."
+description: "Visa requirements for 40,027 passport-destination pairs (199 passports, 202 destinations) in 15 languages. Entry rules, documents, fees, processing times, transit visas, vaccinations and overstay penalties for any country pair."
 category: Travel
 tags:
   - visa
@@ -16,8 +16,7 @@ startCommand:
     properties:
       apiKey:
         type: string
-        description: "Orizn API key for premium features (free tier works without key)"
-    required: []
+        description: "Optional Orizn Visa API key. Leave empty to try the server keyless: quick_visa_check answers 10 pairs/day with no account. A key lifts that cap and unlocks documents, fees, processing times, transit rules and 15 languages. Free key (50 requests/month, no credit card) at https://visa.orizn.app/visa-api"
   commandFunction: |
     (config) => ({
       command: "npx",

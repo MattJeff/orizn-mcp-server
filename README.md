@@ -1,245 +1,144 @@
-# Orizn Visa MCP Server
+# Orizn Visa API MCP Server
+
+Orizn Visa API MCP Server is a Model Context Protocol (MCP) server that gives an AI assistant the visa and entry requirements for 199 passports and 202 destinations — 40,027 passport/destination pairs, answered in 15 languages.
 
 [![npm version](https://img.shields.io/npm/v/orizn-visa-mcp.svg)](https://www.npmjs.com/package/orizn-visa-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-blue.svg)](https://modelcontextprotocol.io)
 
-> Give any AI agent instant access to visa requirements for **39,585 passport-destination pairs** in **15 languages**, with **32 data points per visa** — fees, processing times, photo specs, transit visas, embassies, overstay penalties, safety advisories, and more.
+It answers questions like "do I need a visa to go from France to Japan", "what documents does a US citizen need for China", "can I leave the airport during a layover in Istanbul on an Indian passport" — with data, not a guess.
 
----
+## Compatibility
 
-## Tools
+The server speaks MCP over **stdio** and runs on **Node.js 18 or later**. It works with any MCP client that can launch a stdio server, including Claude Desktop, Claude Code and Cursor. The configuration block below is the same for all of them.
 
-| Tool | Auth | Description |
-|------|------|-------------|
-| `check_visa_requirement` | API key | Full visa details — documents, process, tips, transit, fees, processing days, photo specs, vaccinations, insurance, overstay penalties, embassies, safety, health, remote work, extensions, and more |
-| `quick_visa_check` | API key | Fast yes/no visa check (visa-free / e-visa / required / on arrival / ETA / no admission) |
-| `get_all_destinations` | Key (Pro) | All 199 destinations for any passport |
-| `get_visa_changes` | Key (Starter) | Track recent visa policy changes |
-| `check_transit_visa` | API key | Transit visa rules + free transit hours for top 50 layover hubs (DXB, IST, DOH, SIN, ...) |
-| `get_coverage_stats` | Free | Database coverage statistics |
-
-Each tool description tells the agent exactly **when** to call it (transit, overstay, photos, vaccinations, etc.), so models pick the right one without prompting tricks.
-
-### What `check_visa_requirement` returns
-
-Every full visa response includes up to **32 fields**:
-
-- **Core:** `requirement`, `visa_free_days`, `description`, `documents_required`, `process`, `tips`, `country_info`, `verified`
-- **Cost & timing:** `visa_fee` (single / multiple entry), `processing_days` (standard / express / rush), `best_apply_period`
-- **Entry:** `passport_validity_months`, `entry_by_mode` (air / land / sea), `transit_visa` (per-hub rules)
-- **Documents:** `photo_specs` (mm dimensions, background, glasses rules)
-- **Health & safety:** `vaccinations_required`, `health_requirements`, `insurance_required`, `safety` (advisory level 1–4)
-- **Penalties & warnings:** `overstay_penalty` (fine, ban, criminal), `dual_nationality_warnings`, `stamp_warnings`
-- **Long-stay:** `remote_work_visa` (digital nomad), `extension_rules`, `minor_rules`
-- **Embassies:** `embassy.your_embassy_at_destination` (emergencies) + `embassy.visa_application_embassy` (where to apply)
-- **History:** `reciprocity_history` (past policy changes between the two countries)
-
-Anything not relevant to a given pair is omitted (e.g. `remote_work_visa` only appears when a digital nomad visa exists).
-
----
-
-## Quick Start
-
-### Claude Desktop
-
-Add to your `claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "orizn-visa": {
-      "command": "npx",
-      "args": ["-y", "orizn-visa-mcp"],
-      "env": {
-        "ORIZN_API_KEY": "your-api-key"
-      }
-    }
-  }
-}
-```
-
-### Cursor
-
-Add to your Cursor MCP settings:
-
-```json
-{
-  "mcpServers": {
-    "orizn-visa": {
-      "command": "npx",
-      "args": ["-y", "orizn-visa-mcp"],
-      "env": {
-        "ORIZN_API_KEY": "your-api-key"
-      }
-    }
-  }
-}
-```
-
-### Codex Desktop
-
-OpenAI Codex Desktop supports MCP natively. Add to your Codex MCP config:
-
-```json
-{
-  "mcpServers": {
-    "orizn-visa": {
-      "command": "npx",
-      "args": ["-y", "orizn-visa-mcp"],
-      "env": {
-        "ORIZN_API_KEY": "your-api-key"
-      }
-    }
-  }
-}
-```
-
-### Composio
-
-[Composio](https://composio.dev) connects AI agents to 500+ tools via MCP. Use Orizn Visa through Composio's MCP support:
-
-```json
-{
-  "mcpServers": {
-    "orizn-visa": {
-      "command": "npx",
-      "args": ["-y", "orizn-visa-mcp"],
-      "env": {
-        "ORIZN_API_KEY": "your-api-key"
-      }
-    }
-  }
-}
-```
-
-### Any MCP Client
+## Install
 
 ```bash
 npx orizn-visa-mcp
 ```
 
-Or with an API key:
+Nothing to build, nothing to clone. Add it to your MCP client config:
 
-```bash
-npx orizn-visa-mcp --api-key YOUR_KEY
+```json
+{
+  "mcpServers": {
+    "orizn-visa": {
+      "command": "npx",
+      "args": ["-y", "orizn-visa-mcp"]
+    }
+  }
+}
 ```
 
----
+Restart the client, then ask: *"Do I need a visa to go from France to Japan?"* — **that works with no API key**, 10 checks a day.
 
-## Configuration
+For everything else (documents, fees, processing times, transit rules, 15 languages), add a free key:
 
-| Option | Description |
-|--------|-------------|
-| `ORIZN_API_KEY` env var | Set your API key via environment variable |
-| `--api-key` CLI arg | Pass your API key as a command-line argument |
+```json
+{
+  "mcpServers": {
+    "orizn-visa": {
+      "command": "npx",
+      "args": ["-y", "orizn-visa-mcp"],
+      "env": {
+        "ORIZN_API_KEY": "orizn_visa_..."
+      }
+    }
+  }
+}
+```
 
-**Free tier** works without a key — you get access to `quick_visa_check` and `get_coverage_stats`.
+The key can also be passed as an argument, which takes precedence over the environment variable:
 
-Get your API key at **[visa.orizn.app](https://visa.orizn.app)**
+```bash
+npx orizn-visa-mcp --api-key orizn_visa_...
+```
 
----
+## Example questions
 
-## Examples
-
-Just ask your AI agent in natural language:
-
-**Basic checks**
 - *"Do I need a visa to travel from France to Thailand?"*
-- *"Show me all visa-free countries for a Brazilian passport."*
 - *"What documents do I need as a US citizen visiting China?"*
-
-**Layovers & transit**
-- *"Do I need a transit visa if I'm Indian and connecting through Dubai?"*
+- *"Compare Thailand, Vietnam and Indonesia for a Brazilian passport."*
 - *"Can I leave the airport during a 12h layover in Istanbul on a Chinese passport?"*
-
-**Cost & timing**
 - *"How much does a Schengen visa cost for a Filipino passport holder?"*
-- *"What's the processing time for a US tourist visa right now?"*
-
-**Health & insurance**
 - *"Which vaccinations do I need to enter Brazil with a French passport?"*
-- *"What's the minimum travel insurance coverage required for Schengen?"*
-
-**Documents & photos**
-- *"What are the photo specs for a Chinese visa application?"*
-- *"How long does my passport need to be valid to enter Vietnam?"*
-
-**Penalties & rules**
 - *"What's the fine if I overstay my Thai visa by 3 days?"*
-- *"Are there entry restrictions if my passport has an Israeli stamp?"*
-
-**Long-stay & remote work**
 - *"Does Portugal have a digital nomad visa, and what does it cost?"*
-- *"Can I extend my Thai tourist visa inside Thailand?"*
+- *"Réponds en français : ai-je besoin d'un visa pour le Japon avec un passeport marocain ?"*
 
-**Recent changes**
-- *"Have any visa policies changed recently for Indian passport holders?"*
+## Tools
 
----
+| Tool | Arguments | What it returns | Plan |
+|------|-----------|-----------------|------|
+| `check_visa_requirement` | `passport`, `destination`, `lang` | Full entry requirements for one passport into one destination: requirement type, days allowed, documents, application steps, fees, processing times, passport validity, photo specs, vaccinations, insurance, safety advisory, overstay penalties, entry by air/land/sea, remote-work visa, extension and minor rules, embassies. | Any key |
+| `quick_visa_check` | `passport`, `destination` | One line: the requirement code, the number of visa-free days, and the date the pair was last verified. No documents, no fees, no translation. | **None** — 10/day keyless, unlimited with any key |
+| `compare_destinations` | `passport`, `destinations` (1–25), `lang` | Up to 25 destinations for one passport side by side: requirement, visa-free days, description, passport validity, fee, safety, health, vaccinations, insurance, entry by mode, remote-work visa. Each destination returned counts as one request. | Hobby or above |
+| `check_transit_visa` | `passport`, `transit_country`, `lang` | Layover rules only: whether the traveller may stay airside or leave the airport while connecting, and how many free transit hours the main hubs grant. | Hobby or above |
+| `get_coverage_stats` | none | Size of the database: pairs, passports, destinations, translations, languages, and the distribution of requirement types. Says nothing about a specific pair. | None |
+| `get_recent_changes` | `passport`, `destination`, `since`, `limit` (all optional) | Visa rules that changed recently, with the source that reported them and the date. **The feed is currently off** — see below. | None |
 
-## Supported Languages
+Country codes are **ISO 3166-1 alpha-3** (`FRA`, `JPN`, `USA`), not alpha-2.
 
-| Code | Language |
-|------|----------|
-| `en` | English |
-| `fr` | French |
-| `es` | Spanish |
-| `de` | German |
-| `it` | Italian |
-| `pt` | Portuguese |
-| `ru` | Russian |
-| `zh` | Chinese |
-| `ja` | Japanese |
-| `ko` | Korean |
-| `ar` | Arabic |
-| `hi` | Hindi |
-| `th` | Thai |
-| `vi` | Vietnamese |
-| `tl` | Filipino |
+`requirement` is one of `visa_free`, `visa_required`, `e_visa`, `visa_on_arrival`, `eta`, `no_admission`, plus the rarer `partial_restrictions`, `admission_refused`, `not_applicable` and `special`.
 
----
+### Resource
 
-## Visa Types
+`visa://supported-languages` — the 15 codes accepted by `lang`, available on every plan including free: `en` `fr` `es` `pt` `de` `ja` `ko` `zh` `ru` `it` `ar` `hi` `th` `vi` `tl`.
 
-| Type | Description |
-|------|-------------|
-| `visa_free` | No visa required |
-| `visa_required` | Visa must be obtained before travel |
-| `e_visa` | Electronic visa available online |
-| `visa_on_arrival` | Visa issued at the port of entry |
-| `eta` | Electronic Travel Authorization |
-| `no_admission` | Entry not permitted |
+### `get_recent_changes` returns nothing on purpose
 
----
+Orizn's policy-change feed is switched off. It was serving inconsistencies detected between two internal Orizn tables as if they were official policy changes, so it now returns HTTP 503 and this tool degrades to:
 
-## Pricing
+```json
+{ "status": "unavailable", "changes": [], "do_not_conclude": "This is NOT evidence that no visa rules changed..." }
+```
 
-| Plan | Price | Requests/month |
-|------|-------|----------------|
-| **Free** | $0 | Limited |
-| **Starter** | $49/mo | — |
-| **Pro** | $199/mo | — |
-| **Business** | $699/mo | — |
-| **Enterprise** | Custom | Unlimited |
+The tool is shipped in this state deliberately: an empty, clearly-labelled answer is the honest one, and the tool starts returning real entries the day the feed runs on verified official sources — at which point entries without a named source and a date are withheld rather than shown.
 
-See full plan details at **[visa.orizn.app](https://visa.orizn.app)**
+## Authentication and free tier
 
----
+`quick_visa_check`, `get_coverage_stats` and `get_recent_changes` work with **no API key at all**. Keyless `quick_visa_check` is capped at **10 checks per day** — the same allowance visa.orizn.app gives an anonymous visitor. Past that the tool says so and points at the free key rather than failing silently. The cap is per running server process and resets at 00:00 UTC.
+
+The other three tools need an API key, sent as the `x-api-key` header to `https://visa.orizn.app/api/v1/visa`.
+
+Get a free one at **[visa.orizn.app/visa-api](https://visa.orizn.app/visa-api)** — no credit card. The free tier is **50 requests/month** (5 until you confirm your email address) and includes the core fields and all 15 languages. On the free plan the deeper fields — fees, processing days, photo specs, vaccinations, insurance, transit visas, entry by mode, overstay penalties, remote-work visas, embassies — come back as an `{"upgrade": "..."}` placeholder, and `compare_destinations` and `check_transit_visa` are gated.
+
+**Hobby is $9/month for 10,000 requests** and unlocks all of it: [upgrade](https://visa.orizn.app/visa-api/login?next=%2Fvisa-api%2Fdashboard%2Fbilling%3Fplan%3Dhobby). Higher-volume plans are listed on the pricing page.
+
+Pass the key in the `env` block of the MCP config — MCP clients do not inherit your shell environment, so exporting `ORIZN_API_KEY` in a terminal is not enough.
+
+Check a key without any MCP client:
+
+```bash
+curl -H "x-api-key: $ORIZN_API_KEY" \
+  "https://visa.orizn.app/api/v1/visa/check?passport=FRA&destination=JPN"
+```
+
+```json
+{ "passport": "FRA", "destination": "JPN", "requirement": "visa_free", "visa_free_days": 90 }
+```
+
+## Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| *"No Orizn API key"* | Expected on the key-only tools. `quick_visa_check` still answers. To lift it, put the key in the `env` block of the config file — not your shell — then restart the client |
+| *"Keyless daily limit reached"* | The 10 free checks for today are spent. A free key removes the cap |
+| HTTP 403, *"check ORIZN_API_KEY for typos"* | Key is wrong, revoked, or has whitespace |
+| HTTP 403, *"requires Hobby plan or above"* | Right key, wrong plan — this tool is paid |
+| HTTP 429 | Monthly quota spent |
+| HTTP 404 on a real country | Use alpha-3 codes (`FRA`, `JPN`), not alpha-2 (`FR`, `JP`) |
+| Nothing works at all | Call `get_coverage_stats` — it needs no key. If that fails too, it is the network |
+| `get_recent_changes` returns an empty list | Expected — the feed is being rebuilt. It does not mean the rules are unchanged |
 
 ## Links
 
-- **API Documentation** — [visa.orizn.app/visa-api/dashboard/docs](https://visa.orizn.app/visa-api/dashboard/docs)
+- **Website** — [visa.orizn.app](https://visa.orizn.app)
+- **API documentation** — [visa.orizn.app/visa-api/dashboard/docs](https://visa.orizn.app/visa-api/dashboard/docs)
+- **Get a free key** — [visa.orizn.app/visa-api](https://visa.orizn.app/visa-api)
 - **GitHub** — [github.com/MattJeff/orizn-mcp-server](https://github.com/MattJeff/orizn-mcp-server)
 - **Support** — [api@orizn.app](mailto:api@orizn.app)
-
----
-
-## Feedback
-
-Building a travel agent or visa tool? We'd love to hear what you're building.
-
-→ **api@orizn.app** — Feature requests, partnerships, and questions welcome.
 
 ## License
 

@@ -145,7 +145,7 @@ npm publish
 {
   "$schema": "https://registry.modelcontextprotocol.io/schemas/server.json",
   "name": "io.github.mattjeff/orizn-visa-mcp",
-  "description": "Visa requirements for 39,585 passport-destination pairs in 15 languages. Check visa types, required documents, and travel tips for any country combination.",
+  "description": "Visa requirements for 40,027 passport-destination pairs in 15 languages. Check visa types, required documents, and travel tips for any country combination.",
   "repository": {
     "url": "https://github.com/MattJeff/orizn-mcp-server",
     "source": "github"
@@ -225,7 +225,7 @@ The file already exists at the repo root with the correct configuration:
 
 ```yaml
 name: orizn-visa
-description: "Visa requirements for 39,585 passport-destination pairs in 15 languages..."
+description: "Visa requirements for 40,027 passport-destination pairs in 15 languages..."
 category: Travel
 tags:
   - visa
@@ -313,7 +313,7 @@ Body:
 **Category:** Travel / Data
 
 **Description:**
-Visa requirements for 39,585 passport-destination pairs in 15 languages. 
+Visa requirements for 40,027 passport-destination pairs in 15 languages. 
 Check visa types, required documents, and travel tips for any country combination.
 
 **Install command:**
@@ -450,7 +450,7 @@ cd awesome-mcp-servers
 Find the appropriate category section (look for "Travel" or "Data" or similar). Add an entry in alphabetical order within that section:
 
 ```markdown
-- [Orizn Visa](https://github.com/MattJeff/orizn-mcp-server) - Visa requirements for 39,585 passport-destination pairs in 15 languages. Check visa types, required documents, and travel tips.
+- [Orizn Visa](https://github.com/MattJeff/orizn-mcp-server) - Visa requirements for 40,027 passport-destination pairs in 15 languages. Check visa types, required documents, and travel tips.
 ```
 
 **Commit and open a PR:**
@@ -467,7 +467,7 @@ Then open a PR on GitHub. Keep the PR description brief:
 ```
 Adding Orizn Visa MCP server under the Travel/Data category.
 
-- Visa requirements for 39,585 passport-destination pairs
+- Visa requirements for 40,027 passport-destination pairs
 - 15 languages supported
 - npm: npx -y orizn-visa-mcp
 ```
@@ -484,7 +484,7 @@ Adding Orizn Visa MCP server under the Travel/Data category.
 Same PR-based process as above. Look for a "Travel & Transportation" or "Data" category. Follow the same format:
 
 ```markdown
-- [Orizn Visa](https://github.com/MattJeff/orizn-mcp-server) - Visa requirements for 39,585+ passport-destination combinations in 15 languages.
+- [Orizn Visa](https://github.com/MattJeff/orizn-mcp-server) - Visa requirements for 40,027+ passport-destination combinations in 15 languages.
 ```
 
 ### 7c. wong2/awesome-mcp-servers
@@ -511,7 +511,7 @@ See [Section 8](#8-mcpserversorg) below.
 2. Fill in the form with:
    - **Server name:** Orizn Visa MCP Server
    - **GitHub URL:** https://github.com/MattJeff/orizn-mcp-server
-   - **Description:** Visa requirements for 39,585 passport-destination pairs in 15 languages. Check visa types, required documents, and travel tips for any country combination.
+   - **Description:** Visa requirements for 40,027 passport-destination pairs in 15 languages. Check visa types, required documents, and travel tips for any country combination.
    - **Category:** Travel / Data
 3. Submit and wait for review
 

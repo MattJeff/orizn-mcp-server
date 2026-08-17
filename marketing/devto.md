@@ -1,7 +1,7 @@
 ---
 title: Building an MCP Server for Visa Requirements in TypeScript
 published: false
-description: A practical walkthrough of building a Model Context Protocol server that gives AI agents reliable access to visa requirement data for 39,585 country pairs.
+description: A practical walkthrough of building a Model Context Protocol server that gives AI agents reliable access to visa requirement data for 40,027 country pairs.
 tags: mcp, typescript, ai, travel
 ---
 
@@ -19,7 +19,7 @@ Here's a problem every travel-focused AI agent has: visa requirements. Ask an LL
 
 Visa data is structured, query-driven, and time-sensitive. It's exactly the kind of information that should come from a live API, not from parametric memory. An MCP server bridges that gap: the agent recognizes a visa question, calls the tool, and gets current data from a real database.
 
-That's what we built with the **Orizn Visa MCP Server** -- a TypeScript MCP server backed by an API covering 39,585 passport-destination pairs in 15 languages.
+That's what we built with the **Orizn Visa MCP Server** -- a TypeScript MCP server backed by an API covering 40,027 passport-destination pairs in 15 languages.
 
 ## Architecture overview
 
@@ -31,20 +31,19 @@ The stack is deliberately minimal:
 - **Transport**: stdio (runs locally alongside the AI client)
 - **Backend**: Orizn Visa API at `https://visa.orizn.app/api/v1/visa`
 
-The server exposes **5 tools** and **2 resources**:
+The server exposes **5 tools** and **1 resource**:
 
 | Tools | Description |
 |-------|------------|
 | `check_visa_requirement` | Full visa details for a passport-destination pair |
-| `quick_visa_check` | Fast yes/no check (free, no API key) |
-| `get_all_destinations` | All destinations for one passport at once |
-| `get_visa_changes` | Recent visa policy updates |
-| `get_coverage_stats` | Database coverage statistics |
+| `quick_visa_check` | Fast yes/no check |
+| `compare_destinations` | Up to 25 destinations for one passport, side by side |
+| `check_transit_visa` | Layover and transit rules per hub |
+| `get_coverage_stats` | Database coverage statistics — the only tool that works without a key |
 
 | Resources | Description |
 |-----------|------------|
 | `visa://supported-languages` | The 15 supported language codes |
-| `visa://country-codes` | All 199 ISO3 country codes the API accepts |
 
 ## Code walkthrough
 
@@ -78,7 +77,7 @@ Tools are defined with a name, description, and JSON Schema for inputs. Here's t
     "Check visa requirements between any two countries. Returns visa type " +
     "(visa-free, e-visa, visa required, etc.), allowed stay duration, " +
     "required documents, step-by-step application process, and travel tips. " +
-    "Covers 39,585 passport-destination pairs in 15 languages. " +
+    "Covers 40,027 passport-destination pairs in 15 languages. " +
     "Use this tool when the user asks about visa rules, entry requirements, " +
     "or whether they need a visa to visit a country.",
   inputSchema: {
@@ -136,14 +135,6 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
           uri: request.params.uri,
           mimeType: "application/json",
           text: JSON.stringify(SUPPORTED_LANGUAGES_RESOURCE, null, 2),
-        }],
-      };
-    case "visa://country-codes":
-      return {
-        contents: [{
-          uri: request.params.uri,
-          mimeType: "application/json",
-          text: JSON.stringify(COUNTRY_CODES_RESOURCE, null, 2),
         }],
       };
   }
@@ -212,7 +203,7 @@ function validateISO3(code: unknown, paramName: string): string {
 
 ## Key decisions and lessons learned
 
-**Tool descriptions are your most important code.** The LLM reads them to decide *when* to invoke your tool. Vague descriptions mean the agent won't call your tool when it should. We explicitly state what each tool returns, what it covers (39,585 pairs, 15 languages), and when to use it versus alternatives. This isn't documentation -- it's prompt engineering.
+**Tool descriptions are your most important code.** The LLM reads them to decide *when* to invoke your tool. Vague descriptions mean the agent won't call your tool when it should. We explicitly state what each tool returns, what it covers (40,027 pairs, 15 languages), and when to use it versus alternatives. This isn't documentation -- it's prompt engineering.
 
 **stdout is sacred.** In stdio transport, stdout carries MCP protocol messages. If you `console.log()` anything, you'll corrupt the protocol stream and crash the connection. All our logging goes to stderr via `process.stderr.write()`. This is the #1 mistake people make when building their first MCP server.
 

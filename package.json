@@ -1,7 +1,7 @@
 {
   "name": "orizn-visa-mcp",
-  "version": "1.1.0",
-  "description": "MCP server for Orizn Visa API — 39,585 passport-destination pairs in 15 languages, 32 data points per visa (fees, processing, photo specs, transit visas, embassies, overstay penalties, safety, vaccinations, remote work visas)",
+  "version": "1.3.0",
+  "description": "MCP server that gives an AI assistant the visa and entry requirements for 199 passports and 202 destinations (40,027 pairs) in 15 languages: documents, fees, processing times, photo specs, transit visas, embassies, overstay penalties, safety, vaccinations, remote-work visas. Free API key, no card.",
   "main": "dist/index.js",
   "bin": {
     "orizn-visa-mcp": "dist/index.js"
@@ -11,7 +11,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test": "node --test test/*.test.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0"

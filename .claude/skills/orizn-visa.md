@@ -27,8 +27,10 @@ Add to your MCP config:
 }
 ```
 
+A key is required (free, 10 s, no card): https://visa.orizn.app/visa-api
+
 ## Example prompts
 
 - "Do I need a visa from France to Thailand?"
 - "What documents do I need for US citizen visiting China?"
-- "List all visa-free countries for Brazilian passport"
+- "Compare Thailand, Vietnam and Indonesia for a Brazilian passport" (up to 25 destinations per call)

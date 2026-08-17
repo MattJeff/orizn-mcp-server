@@ -9,7 +9,7 @@ Mentions: @AnthropicAI @OpenAI @LangChainAI
 > I just gave every AI agent in the world the ability to check visa requirements.
 >
 > Built the first MCP server for visa data:
-> - 39,585 passport-destination pairs
+> - 40,027 passport-destination pairs
 > - 15 languages
 > - 136 government sources
 > - Works with Claude, GPT, Cursor, any MCP client
@@ -107,7 +107,7 @@ Note: Twitter does not render code blocks natively. Consider posting the JSON as
 
 > I built the first MCP server for visa data.
 >
-> 39,585 passport-destination pairs. 15 languages. 136 government sources. Works with Claude, GPT, Cursor, any MCP client.
+> 40,027 passport-destination pairs. 15 languages. 136 government sources. Works with Claude, GPT, Cursor, any MCP client.
 >
 > npx orizn-visa-mcp
 
