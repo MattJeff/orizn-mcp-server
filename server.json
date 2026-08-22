@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.MattJeff/orizn-visa-mcp",
-  "description": "Visa requirements for 40,027 passport-destination pairs in 15 languages. Free key, no card.",
+  "description": "Visa and entry requirements for any passport/destination pair, in 15 languages. Free key.",
   "repository": {
     "url": "https://github.com/MattJeff/orizn-mcp-server",
     "source": "github"
   },
-  "version": "1.3.0",
+  "version": "1.3.1",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "orizn-visa-mcp",
-      "version": "1.3.0",
+      "version": "1.3.1",
       "runtimeHint": "npx",
       "transport": {
         "type": "stdio"

@@ -201,7 +201,7 @@ export function apiErrorMessage(status: number, body: string): string {
   }
 
   if (status === 404) {
-    return `${sentence(detail || "No data for this pair.")} Orizn covers 199 passports and 202 destinations — ` +
+    return `${sentence(detail || "No data for this pair.")} Check the codes before assuming the pair is uncovered — ` +
       `check that both codes are ISO 3166-1 alpha-3 (FRA, JPN, USA), not alpha-2 (FR, JP, US).`;
   }
 
@@ -742,7 +742,7 @@ async function main(): Promise<void> {
       "  Needs a key:  check_visa_requirement · compare_destinations · check_transit_visa\n" +
       "\n" +
       "  Free key, 10 seconds, no credit card:  " + KEY_URL + "\n" +
-      "  50 requests/month · all 15 languages · 199 passports · documents, fees, transit\n" +
+      "  50 requests/month · all 15 languages · documents, fees, transit rules\n" +
       "\n" +
       "  Then add it to your MCP config:  \"env\": { \"ORIZN_API_KEY\": \"orizn_visa_...\" }\n" +
       "  or start the server with:        npx orizn-visa-mcp --api-key orizn_visa_...\n" +

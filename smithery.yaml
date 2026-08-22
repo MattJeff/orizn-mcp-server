@@ -1,5 +1,5 @@
 name: orizn-visa
-description: "Visa requirements for 40,027 passport-destination pairs (199 passports, 202 destinations) in 15 languages. Entry rules, documents, fees, processing times, transit visas, vaccinations and overstay penalties for any country pair."
+description: "Visa and entry requirements for any passport/destination pair, in 15 languages. Entry rules, documents, fees, processing times, transit visas, vaccinations and overstay penalties. Live coverage counts via get_coverage_stats."
 category: Travel
 tags:
   - visa

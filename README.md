@@ -1,6 +1,8 @@
 # Orizn Visa API MCP Server
 
-Orizn Visa API MCP Server is a Model Context Protocol (MCP) server that gives an AI assistant the visa and entry requirements for 199 passports and 202 destinations — 40,027 passport/destination pairs, answered in 15 languages.
+Orizn Visa API MCP Server is a Model Context Protocol (MCP) server that gives an AI assistant the visa and entry requirements for any passport/destination pair, answered in 15 languages.
+
+Coverage grows: rather than print a number here that goes stale, the `get_coverage_stats` tool reads it live from the API (also public at <https://visa.orizn.app/api/v1/visa/stats>).
 
 [![npm version](https://img.shields.io/npm/v/orizn-visa-mcp.svg)](https://www.npmjs.com/package/orizn-visa-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
