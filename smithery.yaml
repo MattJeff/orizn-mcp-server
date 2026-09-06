@@ -16,7 +16,7 @@ startCommand:
     properties:
       apiKey:
         type: string
-        description: "Optional Orizn Visa API key. Leave empty to try the server keyless: quick_visa_check answers 10 pairs/day with no account. A key lifts that cap and unlocks documents, fees, processing times, transit rules and 15 languages. Free key (50 requests/month, no credit card) at https://visa.orizn.app/visa-api"
+        description: "Optional Orizn Visa API key. Leave empty to try the server keyless: quick_visa_check answers 10 pairs/day with no account. A key lifts that cap and unlocks documents, fees, processing times, transit rules and 15 languages. Free key (100 requests/month, no credit card) at https://visa.orizn.app/visa-api"
   commandFunction: |
     (config) => ({
       command: "npx",

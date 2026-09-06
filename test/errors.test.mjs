@@ -7,7 +7,7 @@ process.env.ORIZN_MCP_NO_MAIN = "1";
 const { apiErrorMessage, parseDestinationList } = await import("../dist/index.js");
 
 const KEY_URL = "https://visa.orizn.app/visa-api";
-const BILLING = "dashboard%2Fbilling%3Fplan%3Dhobby";
+const BILLING = "dashboard%2Fbilling%3Fplan%3Dstarter";
 
 test("401 sends the developer to the free-key page", () => {
   const m = apiErrorMessage(401, '{"error":"Missing API key."}');
@@ -34,10 +34,27 @@ test("403 on a plan gate pushes checkout, and only ours", () => {
   assert.ok(live.includes(BILLING));
 });
 
-test("429 gives the quota truth and the upgrade link", () => {
-  const m = apiErrorMessage(429, '{"error":"Monthly limit reached","limit":50}');
-  assert.match(m, /50 requests\/month/);
+test("429 without a server link falls back to our Starter link, once", () => {
+  const m = apiErrorMessage(429, '{"error":"Monthly limit reached","limit":100}');
+  assert.match(m, /Starter is \$49/);
+  assert.equal(m.match(/https?:\/\//g).length, 1, "exactly one URL");
   assert.ok(m.includes(BILLING));
+});
+
+test("429 with the server's own price + checkout link is shown as is", () => {
+  const m = apiErrorMessage(
+    429,
+    '{"error":{"code":"quota_exceeded","message":"Monthly limit reached. Starter is $49/mo for 30,000 requests: https://visa.orizn.app/visa-api/login?next=x"}}',
+  );
+  assert.equal(m.match(/https?:\/\//g).length, 1, "the server link, and no second one from us");
+  assert.doesNotMatch(m, /Hobby|50 requests/);
+  assert.doesNotMatch(m, /\{"code"/, "the envelope is parsed, not dumped");
+  assert.ok(m.endsWith("next=x"), "no period glued to the checkout link");
+});
+
+test("429 abuse_limit gets no Starter pitch — it caps every plan", () => {
+  const m = apiErrorMessage(429, '{"error":{"code":"abuse_limit","message":"12 distinct destinations already queried for passport FRA today (cap 10 on the free plan)."}}');
+  assert.doesNotMatch(m, /Starter/);
 });
 
 test("404 explains alpha-3 vs alpha-2", () => {

@@ -1,6 +1,6 @@
 {
   "name": "orizn-visa-mcp",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "MCP server that gives an AI assistant visa and entry requirements for any passport/destination pair, in 15 languages: requirement type, visa-free days, documents, fees, processing times, photo specs, transit visas, embassies, overstay penalties, safety, vaccinations, remote-work visas. Live coverage counts via get_coverage_stats. Free API key, no card.",
   "main": "dist/index.js",
   "bin": {

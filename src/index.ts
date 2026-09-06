@@ -25,13 +25,13 @@ import {
 const API_BASE_URL = "https://visa.orizn.app/api/v1/visa";
 const REQUEST_TIMEOUT_MS = 10_000;
 const MAX_RETRIES = 1;
-const VERSION = "1.3.0";
+const VERSION = "1.3.2";
 
 /** Where a developer gets a free key, in ten seconds, without a card. */
 const KEY_URL = "https://visa.orizn.app/visa-api";
-/** Deep link straight to Hobby checkout ($9/mo, 10,000 req). */
+/** Deep link straight to Starter checkout ($49/mo, 30,000 req) — Hobby is closed to new accounts. */
 const UPGRADE_URL =
-  "https://visa.orizn.app/visa-api/login?next=%2Fvisa-api%2Fdashboard%2Fbilling%3Fplan%3Dhobby";
+  "https://visa.orizn.app/visa-api/login?next=%2Fvisa-api%2Fdashboard%2Fbilling%3Fplan%3Dstarter%26source%3Dmcp";
 
 /**
  * Referer sent on keyless calls.
@@ -83,7 +83,7 @@ export function resetAnonQuota(): void {
 
 export const ANON_LIMIT_MESSAGE =
   `Keyless daily limit reached (${ANON_DAILY_LIMIT} checks/day — the same allowance visa.orizn.app ` +
-  `gives an anonymous visitor). A free API key raises it to 50 requests/month and unlocks documents, ` +
+  `gives an anonymous visitor). A free API key raises it to 100 requests/month and unlocks documents, ` +
   `fees, processing times, transit rules and 15 languages: ${KEY_URL} (10 seconds, no credit card). ` +
   `Set ORIZN_API_KEY=<key> in the \`env\` block of your MCP config, then restart the client. ` +
   `The keyless allowance resets at 00:00 UTC.`;
@@ -92,7 +92,7 @@ const NO_KEY_MESSAGE =
   "No Orizn API key: quick_visa_check (yes/no + visa-free days + verification date, " +
   `${ANON_DAILY_LIMIT}/day) and get_coverage_stats still work — a free key at ` +
   KEY_URL +
-  " (10 seconds, no card, 50 requests/month) lifts that cap and adds documents, fees, processing " +
+  " (10 seconds, no card, 100 requests/month) lifts that cap and adds documents, fees, processing " +
   "times, transit rules and 15 languages; set ORIZN_API_KEY=<key> in the `env` block of your MCP " +
   "config, or start the server with --api-key <key>, then restart the client.";
 
@@ -154,7 +154,10 @@ function log(level: "info" | "warn" | "error", message: string, data?: unknown):
 export function apiErrorDetail(body: string): string {
   try {
     const parsed = JSON.parse(body) as { error?: unknown; message?: unknown };
-    const parts = [parsed.error, parsed.message].filter(
+    // Enveloppe serveur `{ error: { code, message } }` ou chaîne nue `{ error: "…" }`.
+    const err = parsed.error;
+    const msg = err && typeof err === "object" ? (err as { message?: unknown }).message : err;
+    const parts = [msg, parsed.message].filter(
       (v): v is string => typeof v === "string" && v.length > 0,
     );
     if (parts.length > 0) return parts.join(" ");
@@ -164,10 +167,11 @@ export function apiErrorDetail(body: string): string {
   return body.slice(0, 300).trim();
 }
 
-/** Terminate a fragment so the sentence we append to it reads as a sentence. */
+/** Terminate a fragment so the sentence we append to it reads as a sentence.
+ *  A trailing URL stays bare: a period glued to it ends up inside the link (source="api_429."). */
 function sentence(s: string): string {
   const t = s.trim();
-  return !t || /[.!?]$/.test(t) ? t : `${t}.`;
+  return !t || /[.!?]$/.test(t) || /https?:\/\/\S+$/.test(t) ? t : `${t}.`;
 }
 
 export function apiErrorMessage(status: number, body: string): string {
@@ -189,15 +193,20 @@ export function apiErrorMessage(status: number, body: string): string {
       // The API appends its own bare billing link ("Upgrade at https://…/dashboard/billing").
       // Two upgrade URLs in one sentence is one too many, and ours preselects the plan.
       const withoutApiLink = detail.replace(/\s*Upgrade at\s+https?:\/\/\S+/i, "");
-      return `${sentence(withoutApiLink)} Upgrade — Hobby is $9/month for 10,000 requests: ${UPGRADE_URL}`;
+      return `${sentence(withoutApiLink)} Upgrade — Starter is $49/month for 30,000 requests, commercial licence: ${UPGRADE_URL}`;
     }
     return `Orizn rejected this API key (HTTP 403). Check ORIZN_API_KEY for typos or stray whitespace, ` +
       `confirm the key is still active in your dashboard, or get a fresh free key at ${KEY_URL}.`;
   }
 
   if (status === 429) {
-    return `${sentence(detail || "Rate limit reached.")} Free keys allow 50 requests/month ` +
-      `(5 until you confirm your email address). Hobby is $9/month for 10,000 requests: ${UPGRADE_URL}`;
+    // Le serveur porte prix + lien checkout depuis sept. 2026 ; repli pour un vieux serveur ou une fixture.
+    // Pas de pitch Starter sur un abuse_limit (plafond par passeport/jour, tous plans), ni quand NOTRE lien
+    // est déjà là — un lien tiers (page 429 d'un proxy) ne compte pas.
+    let code = "";
+    try { code = String((JSON.parse(body) as { error?: { code?: unknown } }).error?.code ?? ""); } catch { /* corps non JSON */ }
+    const fallback = code === "abuse_limit" || /https:\/\/visa\.orizn\.app\//.test(detail) ? "" : ` Starter is $49/month for 30,000 requests: ${UPGRADE_URL}`;
+    return `${sentence(detail || "Rate limit reached.")}${fallback}`;
   }
 
   if (status === 404) {
@@ -470,7 +479,7 @@ const TOOLS = [
       "Use it for shortlists — 'where can I go visa-free in Asia', 'compare Thailand, Vietnam and Indonesia for my passport', " +
       "trip planning across several candidate countries. It does NOT return every country in the world: " +
       "pass the specific destinations to compare. Each destination returned counts as one request against the quota. " +
-      "Requires a paid plan (Hobby $9/month or above) — a free key gets HTTP 403 here.",
+      "Requires a paid plan (Starter $49/month or above) — a free key gets HTTP 403 here.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -505,7 +514,7 @@ const TOOLS = [
       "the tool says so instead of guessing. " +
       "Call this for layovers, stopovers and connecting flights — not for entering a country as a destination " +
       "(use check_visa_requirement for that). Requires an API key; transit data needs a paid plan " +
-      "(Hobby $9/month or above), a free key gets an upgrade placeholder back.",
+      "(Starter $49/month or above), a free key gets an upgrade placeholder back.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -742,7 +751,7 @@ async function main(): Promise<void> {
       "  Needs a key:  check_visa_requirement · compare_destinations · check_transit_visa\n" +
       "\n" +
       "  Free key, 10 seconds, no credit card:  " + KEY_URL + "\n" +
-      "  50 requests/month · all 15 languages · documents, fees, transit rules\n" +
+      "  100 requests/month · all 15 languages · documents, fees, transit rules\n" +
       "\n" +
       "  Then add it to your MCP config:  \"env\": { \"ORIZN_API_KEY\": \"orizn_visa_...\" }\n" +
       "  or start the server with:        npx orizn-visa-mcp --api-key orizn_visa_...\n" +
@@ -779,7 +788,7 @@ async function main(): Promise<void> {
             ...tool,
             description:
               `[needs a free API key — this call will fail without one] ${tool.description} ` +
-              `Get one at https://visa.orizn.app/visa-api?source=mcp (50 requests/month, no card), ` +
+              `Get one at https://visa.orizn.app/visa-api?source=mcp (100 requests/month, no card), ` +
               `then set ORIZN_API_KEY in the env block of the MCP config.`,
           },
     ),

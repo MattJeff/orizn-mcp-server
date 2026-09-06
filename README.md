@@ -75,8 +75,8 @@ npx orizn-visa-mcp --api-key orizn_visa_...
 |------|-----------|-----------------|------|
 | `check_visa_requirement` | `passport`, `destination`, `lang` | Full entry requirements for one passport into one destination: requirement type, days allowed, documents, application steps, fees, processing times, passport validity, photo specs, vaccinations, insurance, safety advisory, overstay penalties, entry by air/land/sea, remote-work visa, extension and minor rules, embassies. | Any key |
 | `quick_visa_check` | `passport`, `destination` | One line: the requirement code, the number of visa-free days, and the date the pair was last verified. No documents, no fees, no translation. | **None** — 10/day keyless, unlimited with any key |
-| `compare_destinations` | `passport`, `destinations` (1–25), `lang` | Up to 25 destinations for one passport side by side: requirement, visa-free days, description, passport validity, fee, safety, health, vaccinations, insurance, entry by mode, remote-work visa. Each destination returned counts as one request. | Hobby or above |
-| `check_transit_visa` | `passport`, `transit_country`, `lang` | Layover rules only: whether the traveller may stay airside or leave the airport while connecting, and how many free transit hours the main hubs grant. | Hobby or above |
+| `compare_destinations` | `passport`, `destinations` (1–25), `lang` | Up to 25 destinations for one passport side by side: requirement, visa-free days, description, passport validity, fee, safety, health, vaccinations, insurance, entry by mode, remote-work visa. Each destination returned counts as one request. | Starter or above |
+| `check_transit_visa` | `passport`, `transit_country`, `lang` | Layover rules only: whether the traveller may stay airside or leave the airport while connecting, and how many free transit hours the main hubs grant. | Starter or above |
 | `get_coverage_stats` | none | Size of the database: pairs, passports, destinations, translations, languages, and the distribution of requirement types. Says nothing about a specific pair. | None |
 | `get_recent_changes` | `passport`, `destination`, `since`, `limit` (all optional) | Visa rules that changed recently, with the source that reported them and the date. **The feed is currently off** — see below. | None |
 
@@ -104,9 +104,9 @@ The tool is shipped in this state deliberately: an empty, clearly-labelled answe
 
 The other three tools need an API key, sent as the `x-api-key` header to `https://visa.orizn.app/api/v1/visa`.
 
-Get a free one at **[visa.orizn.app/visa-api](https://visa.orizn.app/visa-api)** — no credit card. The free tier is **50 requests/month** (5 until you confirm your email address) and includes the core fields and all 15 languages. On the free plan the deeper fields — fees, processing days, photo specs, vaccinations, insurance, transit visas, entry by mode, overstay penalties, remote-work visas, embassies — come back as an `{"upgrade": "..."}` placeholder, and `compare_destinations` and `check_transit_visa` are gated.
+Get a free one at **[visa.orizn.app/visa-api](https://visa.orizn.app/visa-api)** — no credit card. The free tier is **100 requests/month** (5 until you confirm your email address) and includes the core fields and all 15 languages. On the free plan the deeper fields — fees, processing days, photo specs, vaccinations, insurance, transit visas, entry by mode, overstay penalties, remote-work visas, embassies — come back as an `{"upgrade": "..."}` placeholder, and `compare_destinations` and `check_transit_visa` are gated.
 
-**Hobby is $9/month for 10,000 requests** and unlocks all of it: [upgrade](https://visa.orizn.app/visa-api/login?next=%2Fvisa-api%2Fdashboard%2Fbilling%3Fplan%3Dhobby). Higher-volume plans are listed on the pricing page.
+**Starter is $49/month for 30,000 requests** and unlocks all of it, with a commercial licence: [upgrade](https://visa.orizn.app/visa-api/login?next=%2Fvisa-api%2Fdashboard%2Fbilling%3Fplan%3Dstarter%26source%3Dmcp). Higher-volume plans are listed on the pricing page.
 
 Pass the key in the `env` block of the MCP config — MCP clients do not inherit your shell environment, so exporting `ORIZN_API_KEY` in a terminal is not enough.
 
@@ -128,7 +128,7 @@ curl -H "x-api-key: $ORIZN_API_KEY" \
 | *"No Orizn API key"* | Expected on the key-only tools. `quick_visa_check` still answers. To lift it, put the key in the `env` block of the config file — not your shell — then restart the client |
 | *"Keyless daily limit reached"* | The 10 free checks for today are spent. A free key removes the cap |
 | HTTP 403, *"check ORIZN_API_KEY for typos"* | Key is wrong, revoked, or has whitespace |
-| HTTP 403, *"requires Hobby plan or above"* | Right key, wrong plan — this tool is paid |
+| HTTP 403, *"requires Starter plan or above"* | Right key, wrong plan — this tool is paid |
 | HTTP 429 | Monthly quota spent |
 | HTTP 404 on a real country | Use alpha-3 codes (`FRA`, `JPN`), not alpha-2 (`FR`, `JP`) |
 | Nothing works at all | Call `get_coverage_stats` — it needs no key. If that fails too, it is the network |

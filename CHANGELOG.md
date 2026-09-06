@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.3.2 — 2026-09-06
+
+### Changed
+
+- **The 429 shows the server's message as-is.** Since September 2026 the API's
+  quota error carries the next plan, its price, the reset date and a checkout
+  link; the server now handles both the string and the `{ error: { message } }`
+  envelope, and only adds its own Starter line when no visa.orizn.app link is
+  present. No more truncated JSON, no double URL.
+- Free tier is **100 requests/month** everywhere (was still written 50), the
+  upgrade link opens Starter ($49/month, 30,000 requests) instead of the closed
+  Hobby plan, and the User-Agent version matches the package.
+
 ## 1.3.0 — 2026-08-12
 
 ### Added
