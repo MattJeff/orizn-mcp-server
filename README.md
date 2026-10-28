@@ -2,7 +2,7 @@
 
 Orizn Visa API MCP Server is a Model Context Protocol (MCP) server that gives an AI assistant the visa and entry requirements for any passport/destination pair, answered in 15 languages.
 
-Coverage grows: rather than print a number here that goes stale, the `get_coverage_stats` tool reads it live from the API (also public at <https://visa.orizn.app/api/v1/visa/stats>).
+It covers **49,750 pairs — 199 passports × 250 destinations** (as of October 2026). Coverage grows: the `get_coverage_stats` tool reads the current figure live from the API (also public at <https://visa.orizn.app/api/v1/visa/stats>).
 
 [![npm version](https://img.shields.io/npm/v/orizn-visa-mcp.svg)](https://www.npmjs.com/package/orizn-visa-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -13,6 +13,19 @@ It answers questions like "do I need a visa to go from France to Japan", "what d
 ## Compatibility
 
 The server speaks MCP over **stdio** and runs on **Node.js 18 or later**. It works with any MCP client that can launch a stdio server, including Claude Desktop, Claude Code and Cursor. The configuration block below is the same for all of them.
+
+A hosted remote server is also available, nothing to install: **`https://visa.orizn.app/mcp`** (streamable HTTP). Send your key as the `X-API-Key` header; without one, only `quick_visa_check` and `get_coverage_stats` are exposed.
+
+```json
+{
+  "mcpServers": {
+    "orizn-visa": {
+      "url": "https://visa.orizn.app/mcp",
+      "headers": { "X-API-Key": "orizn_visa_..." }
+    }
+  }
+}
+```
 
 ## Install
 
@@ -139,6 +152,7 @@ curl -H "x-api-key: $ORIZN_API_KEY" \
 - **Website** — [visa.orizn.app](https://visa.orizn.app)
 - **API documentation** — [visa.orizn.app/visa-api/dashboard/docs](https://visa.orizn.app/visa-api/dashboard/docs)
 - **Get a free key** — [visa.orizn.app/visa-api](https://visa.orizn.app/visa-api)
+- **Remote MCP endpoint** — `https://visa.orizn.app/mcp`
 - **GitHub** — [github.com/MattJeff/orizn-mcp-server](https://github.com/MattJeff/orizn-mcp-server)
 - **Support** — [api@orizn.app](mailto:api@orizn.app)
 
