@@ -25,5 +25,12 @@
         }
       ]
     }
+  ],
+  "websiteUrl": "https://visa.orizn.app/integrations/mcp",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://visa.orizn.app/mcp"
+    }
   ]
 }
