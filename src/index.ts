@@ -25,10 +25,12 @@ import {
 const API_BASE_URL = "https://visa.orizn.app/api/v1/visa";
 const REQUEST_TIMEOUT_MS = 10_000;
 const MAX_RETRIES = 1;
-const VERSION = "1.3.2";
+const VERSION = "1.3.3";
 
-/** Where a developer gets a free key, in ten seconds, without a card. */
-const KEY_URL = "https://visa.orizn.app/visa-api";
+/** Where a developer gets a free key, in ten seconds, without a card: the SIGNUP
+ *  page (key on screen at once), not the login wall, tagged so the account is
+ *  attributed to this server (visa_api_users.acquisition_source = "mcp"). */
+const KEY_URL = "https://visa.orizn.app/visa-api/register?source=mcp";
 /** Deep link straight to Starter checkout ($49/mo, 30,000 req) — Hobby is closed to new accounts. */
 const UPGRADE_URL =
   "https://visa.orizn.app/visa-api/login?next=%2Fvisa-api%2Fdashboard%2Fbilling%3Fplan%3Dstarter%26source%3Dmcp";
@@ -788,7 +790,7 @@ async function main(): Promise<void> {
             ...tool,
             description:
               `[needs a free API key — this call will fail without one] ${tool.description} ` +
-              `Get one at https://visa.orizn.app/visa-api?source=mcp (100 requests/month, no card), ` +
+              `Get one at ${KEY_URL} (100 requests/month, no card), ` +
               `then set ORIZN_API_KEY in the env block of the MCP config.`,
           },
     ),

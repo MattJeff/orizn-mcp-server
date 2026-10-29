@@ -6,7 +6,7 @@ import test from "node:test";
 process.env.ORIZN_MCP_NO_MAIN = "1";
 const { apiErrorMessage, parseDestinationList } = await import("../dist/index.js");
 
-const KEY_URL = "https://visa.orizn.app/visa-api";
+const KEY_URL = "https://visa.orizn.app/visa-api/register?source=mcp";
 const BILLING = "dashboard%2Fbilling%3Fplan%3Dstarter";
 
 test("401 sends the developer to the free-key page", () => {
