@@ -14,18 +14,34 @@ It answers questions like "do I need a visa to go from France to Japan", "what d
 
 The server speaks MCP over **stdio** and runs on **Node.js 18 or later**. It works with any MCP client that can launch a stdio server, including Claude Desktop, Claude Code and Cursor. The configuration block below is the same for all of them.
 
-A hosted remote server is also available, nothing to install: **`https://visa.orizn.app/mcp`** (streamable HTTP). Send your key as the `X-API-Key` header; without one, only `quick_visa_check` and `get_coverage_stats` are exposed.
+## Remote MCP (no install)
+
+The same six tools are hosted at **`https://visa.orizn.app/mcp`** (Streamable HTTP, JSON-RPC over POST). Nothing runs on your machine.
+
+| | URL |
+|---|---|
+| Keyless | `https://visa.orizn.app/mcp` |
+| With your API key | `https://visa.orizn.app/mcp?key=orizn_visa_...` |
+
+The key is accepted as `?key=`, `Authorization: Bearer <key>` or `X-API-Key: <key>`. Without a key, `quick_visa_check` answers 10 checks a day per network (the same allowance as the anonymous demo on visa.orizn.app); `get_coverage_stats` and `get_recent_changes` are free; the other tools say they need a key. With a key, every call is billed and logged exactly like the REST API. A URL with a key in it is a secret.
+
+- **Claude.ai / Claude Desktop** — Settings → Connectors → Add custom connector, paste the URL.
+- **ChatGPT** — Settings → Apps & Connectors → Advanced settings → Developer mode, then Create, paste the URL, authentication "No authentication".
+- **Claude Code** — `claude mcp add --transport http orizn-visa https://visa.orizn.app/mcp`
+- **Cursor** — `~/.cursor/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "orizn-visa": {
       "url": "https://visa.orizn.app/mcp",
-      "headers": { "X-API-Key": "orizn_visa_..." }
+      "headers": { "Authorization": "Bearer orizn_visa_..." }
     }
   }
 }
 ```
+
+Free key, no card: [visa.orizn.app/visa-api/register](https://visa.orizn.app/visa-api/register?source=mcp).
 
 ## Install
 
@@ -117,7 +133,7 @@ The tool is shipped in this state deliberately: an empty, clearly-labelled answe
 
 The other three tools need an API key, sent as the `x-api-key` header to `https://visa.orizn.app/api/v1/visa`.
 
-Get a free one at **[visa.orizn.app/visa-api](https://visa.orizn.app/visa-api)** — no credit card. The free tier is **100 requests/month** (5 until you confirm your email address) and includes the core fields and all 15 languages. On the free plan the deeper fields — fees, processing days, photo specs, vaccinations, insurance, transit visas, entry by mode, overstay penalties, remote-work visas, embassies — come back as an `{"upgrade": "..."}` placeholder, and `compare_destinations` and `check_transit_visa` are gated.
+Get a free one at **[visa.orizn.app/visa-api/register](https://visa.orizn.app/visa-api/register?source=mcp)** — no credit card. The free tier is **100 requests/month** (5 until you confirm your email address) and includes the core fields and all 15 languages. On the free plan the deeper fields — fees, processing days, photo specs, vaccinations, insurance, transit visas, entry by mode, overstay penalties, remote-work visas, embassies — come back as an `{"upgrade": "..."}` placeholder, and `compare_destinations` and `check_transit_visa` are gated.
 
 **Starter is $49/month for 30,000 requests** and unlocks all of it, with a commercial licence: [upgrade](https://visa.orizn.app/visa-api/login?next=%2Fvisa-api%2Fdashboard%2Fbilling%3Fplan%3Dstarter%26source%3Dmcp). Higher-volume plans are listed on the pricing page.
 
